@@ -1,5 +1,5 @@
 <template>
-  <swiper :slidesPerView="3" :spaceBetween="10" :grabCursor="true" :loop="true" :pagination="{
+  <swiper :slidesPerView="ctas.length > 3 ? 3 : 1" :spaceBetween="10" :grabCursor="true" :loop="true" :pagination="{
     clickable: true,
   }" :modules="modules" :navigation="true" class="mySwiper">
     <swiper-slide :key="index" v-for="(cta, index) in ctas">
@@ -52,6 +52,7 @@ export default {
 .cta-card {
   background-color: $dark-page;
   box-shadow: none;
+  max-width: 33%;
 }
 
 .swiper {

@@ -3,17 +3,7 @@
     <section class="q-my-lg">
       <div class="container">
         <h2 class="text-center">Sobre mim</h2>
-        <p class="q-mt-md">Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad
-          nisi Lorem
-          pariatur
-          mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum
-          Lorem
-          est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit
-          irure
-          elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia
-          voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua
-          reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea
-          consectetur et est culpa et culpa duis.</p>
+        <p class="q-mt-md">{{ about_me }}</p>
       </div>
     </section>
 
@@ -30,15 +20,8 @@
       <div class="container w100">
         <h2 class="text-center">Depoimentos</h2>
         <div class="products flex justify-between w100 q-mt-lg">
-          <TestimonyCard class="w33"
-            text="Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat."
-            name="Ipsum" />
-          <TestimonyCard class="w33"
-            text="Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat."
-            name="Ipsum" />
-          <TestimonyCard class="w33"
-            text="Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat."
-            name="Ipsum" />
+          <TestimonyCard v-for="testimony in testimonies" :key="testimony.id" class="w33" :text="testimony.text"
+            :name="testimony.name" />
         </div>
       </div>
     </section>
@@ -53,56 +36,32 @@
   </q-page>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
+<script setup>
+import { ref, onMounted } from 'vue'
+import { storeToRefs } from 'pinia'
 import FlashingButton from '@components/Utils/FlashingButton.vue'
 import CtaCarousel from '@components/Utils/CtaCarousel.vue'
 import TestimonyCard from '@components/Utils/TestimonyCard.vue'
+import { useSiteInfoStore } from 'stores/siteInfoStore.js'
+import { useProductsStore } from 'stores/productsStore.js'
+import { useTestimoniesStore } from 'stores/testimoniesStore.js'
 
-export default defineComponent({
-  name: 'IndexPage',
-  components: {
-    FlashingButton,
-    CtaCarousel,
-    TestimonyCard,
-  },
-  data() {
-    return {
-      ctas: [
-        {
-          title: 'Lorem',
-          content: 'Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.',
-          button_link: 'https://google.com',
-        },
-        {
-          title: 'Lorem',
-          content: 'Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.',
-          button_link: 'https://google.com',
-        },
-        {
-          title: 'Lorem',
-          content: 'Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.',
-          button_link: 'https://google.com',
-        },
-        {
-          title: 'Lorem',
-          content: 'Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.',
-          button_link: 'https://google.com',
-        },
-        {
-          title: 'Lorem',
-          content: 'Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.',
-          button_link: 'https://google.com',
-        },
-        {
-          title: 'Lorem',
-          content: 'Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.',
-          button_link: 'https://google.com',
-        },
-      ]
-    }
-  }
+const site_info = useSiteInfoStore()
+const products_store = useProductsStore()
+const testimonies_store = useTestimoniesStore()
+const { about_me } = storeToRefs(site_info)
+
+const ctas = ref([])
+const testimonies = ref([])
+
+onMounted(async () => {
+  const products = await products_store.getProducts()
+  const fetched_testimonies = await testimonies_store.getTestimonies()
+
+  ctas.value = products
+  testimonies.value = fetched_testimonies
 })
+
 </script>
 
 <style lang="scss" scoped>

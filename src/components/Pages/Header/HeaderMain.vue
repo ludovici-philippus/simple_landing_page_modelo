@@ -12,20 +12,36 @@
     <section class="container video_call_to_action q-my-xl">
       <hr>
       <div class="q-pa-md flex">
-        <q-video :ratio="16 / 9" src="https://www.youtube.com/embed/eTfj5Ai6sCA" />
+        <q-video :ratio="16 / 9" :src="video" />
       </div>
       <hr>
     </section>
   </q-header>
 </template>
 
-<script>
+<script setup>
+import { ref, onMounted, computed } from 'vue'
 import Logo from '@components/Icons/Logo.vue'
-export default {
-  components: {
-    Logo,
-  },
+import { useSiteInfoStore } from 'stores/siteInfoStore.js'
+
+const logo = ref(null)
+const video = ref(null)
+
+const header_background_image = (image_name) => {
+  return `/imgs/${image_name}`
 }
+
+onMounted(async () => {
+  const site_info_store = useSiteInfoStore()
+  const site_info = await site_info_store.getSiteInfo()
+
+  console.log("SITE INFO: ", site_info)
+
+  document.querySelector('header').style.backgroundImage = header_background_image(site_info.header_bg)
+  video.value = site_info.video
+
+})
+
 </script>
 
 <style lang="scss" scoped>
