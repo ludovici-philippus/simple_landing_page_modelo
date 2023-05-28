@@ -1,7 +1,7 @@
 <template>
   <q-btn flat @click="$emit('action')" class="w33">
     <div class="flex column justify-center items-center card-container">
-      <q-icon size="48px" name="add" />
+      <q-icon size="48px" name="add" :color="color" />
       <h4>{{ text }}</h4>
     </div>
   </q-btn>
@@ -11,6 +11,10 @@
 defineProps({
   text: String,
   action: Function,
+  color: {
+    type: String,
+    default: 'black'
+  }
 })
 
 </script>

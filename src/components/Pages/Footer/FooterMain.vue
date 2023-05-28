@@ -55,6 +55,7 @@
 import { ref } from 'vue'
 import { useUsersStore } from 'stores/usersStore.js'
 import { storeToRefs } from 'pinia'
+import { LocalStorage } from 'quasar'
 
 const login_modal = ref(false)
 const email = ref()
@@ -68,7 +69,7 @@ async function onSubmit() {
 }
 
 function signOut() {
-  LocalStorage.remove('token')
+  LocalStorage.remove('user_token')
   window.location.reload()
 }
 </script>

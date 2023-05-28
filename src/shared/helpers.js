@@ -23,7 +23,7 @@ export const API_PATH = () => {
 }
 
 export const IMAGES_PATH = () => {
-  if (window.location.href.match('localhost')) return 'http://localhost:3000/uploads/'
-  if (window.location.href.match('dev')) return 'https://felipe-api.estudioempreendedor.com/uploads/'
-  return 'https://felipe-api.estudioempreendedor.com/uploads/'
+  if (window.location.href.match('localhost')) return 'http://localhost:3000/uploads/images'
+  if (window.location.href.match('dev')) return 'https://felipe-api.estudioempreendedor.com/uploads/images'
+  return 'https://felipe-api.estudioempreendedor.com/uploads/images'
 }

@@ -13,7 +13,8 @@ const api = axios.create({
 const ENDPOINTS = {
   get_site_info: '',
   edit_video: 'edit_video',
-  delete_video: '/video',
+  edit_about_me: 'edit_about_me',
+  delete_video: 'video',
 }
 
 export const useSiteInfoStore = defineStore('siteInfo', {
@@ -43,6 +44,22 @@ export const useSiteInfoStore = defineStore('siteInfo', {
         .then(response => {
           if(!response.data.success) throw `Não foi possível ${text} o vídeo`
           positiveNotification(`Vídeo ${text} com sucesso`)
+          return response.data.success
+          }
+        )
+        .catch(e => {
+          if (e.response) negativeNotification(e.response.data.error)
+          throw e;
+      });
+    },
+
+    async editAboutMe(about_me) {
+      return await api.patch(`${ENDPOINTS.edit_about_me}/`, {
+        about_me: about_me,
+      })
+        .then(response => {
+          if(!response.data.success) throw `Não foi possível editar o texto`
+          positiveNotification(`Sobre mim editado com sucesso`)
           return response.data.success
           }
         )

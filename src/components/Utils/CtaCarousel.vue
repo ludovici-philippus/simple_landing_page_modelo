@@ -1,16 +1,17 @@
 <template>
-  <swiper :slidesPerView="ctas.length > 3 ? 3 : 1" :spaceBetween="10" :grabCursor="true" :loop="true" :pagination="{
-    clickable: true,
-  }" :modules="modules" :navigation="true" class="mySwiper">
+  <swiper :slidesPerView="ctas.length > 5 ? 3 : ctas.length" :spaceBetween="10" :grabCursor="true" :loop="true"
+    :pagination="{
+      clickable: true,
+    }" :modules="modules" :navigation="true" class="mySwiper">
     <swiper-slide :key="index" v-for="(cta, index) in ctas">
-      <q-card class="cta-card text-white text-center">
-        <q-img class="cta-card-img" loading src="https://cdn.quasar.dev/img/mountains.jpg" />
+      <q-card class="cta-card full-height flex column justify-between text-white text-center w100">
+        <q-img style="height: 200px" class="w100 cta-card-img" loading :src="`${images_path}/${cta.image}`" />
 
-        <q-card-section class="">
+        <q-card-section class="w100">
           <div class="text-h6">{{ cta.title }}</div>
         </q-card-section>
 
-        <q-card-section class="q-pt-none ">
+        <q-card-section class="q-pt-none w100">
           {{ cta.content }}
         </q-card-section>
 
@@ -24,6 +25,7 @@
 </template>
 
 <script>
+import { IMAGES_PATH } from 'src/shared/helpers';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Navigation } from 'swiper';
 import 'swiper/css';
@@ -34,7 +36,29 @@ export default {
   name: "CtaCarousel",
   props: {
     ctas: Array,
-
+  },
+  data() {
+    return {
+      images_path: IMAGES_PATH()
+    }
+  },
+  mounted() {
+    this.setCtaCardWidth()
+  },
+  watch: {
+    ctas() { this.setCtaCardWidth() }
+  },
+  methods: {
+    setCtaCardWidth() {
+      const sizes = {
+        1: '20%',
+        2: '40%',
+        3: '60%',
+        4: '80%',
+      }
+      const percentage = sizes[this.ctas.length] || '100%'
+      document.querySelector('.cta-card')?.setAttribute('width', percentage)
+    }
   },
   components: {
     Swiper,
@@ -52,7 +76,6 @@ export default {
 .cta-card {
   background-color: $dark-page;
   box-shadow: none;
-  max-width: 33%;
 }
 
 .swiper {

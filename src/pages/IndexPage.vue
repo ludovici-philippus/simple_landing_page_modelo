@@ -1,24 +1,7 @@
 <template>
   <q-page class="flex flex-center page q-py-xl">
-    <section class="q-my-lg">
-      <div class="container">
-        <div v-if="is_admin" class="buttons flex row">
-          <q-btn @click="edit_about_me.modal = true" round color="white" class="q-mb-sm"><q-icon color="black"
-              name="brush" /></q-btn>
-        </div>
-        <h2 class="text-center">Sobre mim</h2>
-        <p class="q-mt-md" v-html="about_me"></p>
-      </div>
-    </section>
-
-    <section class="q-my-lg w100">
-      <div class="container w100">
-        <h2 class="text-center">Projetos</h2>
-        <div class="products flex justify-between w100 q-mt-lg">
-          <CtaCarousel class="" :ctas="ctas" />
-        </div>
-      </div>
-    </section>
+    <AboutMe :is_admin="is_admin" />
+    <ProductsComponent :is_admin="is_admin" />
 
     <section class="q-my-lg w100">
       <div class="container w100">
@@ -37,23 +20,6 @@
       </div>
     </section>
 
-    <q-dialog v-model="edit_about_me.modal">
-      <q-card style="width: 500px; max-width: 80vw;">
-        <q-card-section class="text-right">
-          <q-btn class="q-mb-md" round color="red" @click="edit_about_me.modal = false">X</q-btn>
-          <q-form greedy @submit="changeAboutMe" class="q-gutter-md">
-
-            <h4 class="text-center text-black">Editar sobre mim</h4>
-            <q-editor v-model="edit_about_me.text" min-height="5rem" />
-
-            <div>
-              <q-btn label="Editar" type="submit" color="primary" />
-            </div>
-          </q-form>
-        </q-card-section>
-      </q-card>
-    </q-dialog>
-
   </q-page>
 </template>
 
@@ -61,38 +27,23 @@
 import { ref, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import FlashingButton from '@components/Utils/FlashingButton.vue'
-import CtaCarousel from '@components/Utils/CtaCarousel.vue'
 import TestimonyCard from '@components/Utils/TestimonyCard.vue'
-import { useSiteInfoStore } from 'stores/siteInfoStore.js'
-import { useProductsStore } from 'stores/productsStore.js'
+import AboutMe from '@components/Pages/AboutMe.vue'
+import ProductsComponent from '@components/Pages/ProductsComponent.vue'
 import { useTestimoniesStore } from 'stores/testimoniesStore.js'
 import { useUsersStore } from 'stores/usersStore'
 
-const site_info = useSiteInfoStore()
-const products_store = useProductsStore()
 const testimonies_store = useTestimoniesStore()
-const { about_me } = storeToRefs(site_info)
 const { is_admin } = storeToRefs(useUsersStore())
 
-const ctas = ref([])
 const testimonies = ref([])
 
-const edit_about_me = ref({
-  modal: false,
-  text: about_me,
-})
 
 onMounted(async () => {
-  const products = await products_store.getProducts()
   const fetched_testimonies = await testimonies_store.getTestimonies()
 
-  ctas.value = products
   testimonies.value = fetched_testimonies
 })
-
-async function changeAboutMe() {
-  console.log("EDITADO")
-}
 
 </script>
 

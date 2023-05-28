@@ -12,6 +12,7 @@ const api = axios.create({
 
 const ENDPOINTS = {
   get_products: 'all',
+  create_product: 'create_product'
 }
 
 export const useProductsStore = defineStore('products', {
@@ -31,6 +32,27 @@ export const useProductsStore = defineStore('products', {
           throw e;
       });
     },
+
+    async addProduct(data) {
+      return await axios({
+        method: 'post',
+        url: `${API_PATH()}product/${ENDPOINTS.create_product}`,
+        data: data,
+        headers: {
+          'Authorization': LocalStorage.getItem('user_token') || 0,
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(response => {
+          if(!response.data.success) throw "Não foi possível criar este produto!"
+
+          positiveNotification("Produto criado com sucesso!")
+          return true
+        })
+        .catch(e => {
+          if (e.response) negativeNotification(e.response.data.error)
+          throw e;
+        });
+      },
 
     },
   }
