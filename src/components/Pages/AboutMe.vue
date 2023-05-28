@@ -30,7 +30,7 @@
 
 <script setup>
 import { useSiteInfoStore } from 'stores/siteInfoStore.js'
-import { ref, onMounted, defineProps } from 'vue'
+import { ref, onMounted, defineProps, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 
 const site_info = useSiteInfoStore()
@@ -48,6 +48,12 @@ const edit_about_me = ref({
 onMounted(() => {
   temp_about_me.value = site_info.about_me
 
+})
+
+watch(about_me, (new_value) => {
+  if (new_value) {
+    temp_about_me.value = new_value
+  }
 })
 
 async function changeAboutMe() {

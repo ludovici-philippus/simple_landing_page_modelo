@@ -32,7 +32,7 @@ export const useSiteInfoStore = defineStore('siteInfo', {
           }
         )
         .catch(e => {
-          negativeNotification(e)
+          negativeNotification("Não foi possível recuperar os dados dessa página")
           throw e;
       });
     },
@@ -49,6 +49,7 @@ export const useSiteInfoStore = defineStore('siteInfo', {
         )
         .catch(e => {
           if (e.response) negativeNotification(e.response.data.error)
+          else negativeNotification(`Não foi possível ${text} o vídeo`)
           throw e;
       });
     },
@@ -65,6 +66,7 @@ export const useSiteInfoStore = defineStore('siteInfo', {
         )
         .catch(e => {
           if (e.response) negativeNotification(e.response.data.error)
+          else negativeNotification(`Não foi possível editar o texto`)
           throw e;
       });
     },
@@ -79,6 +81,7 @@ export const useSiteInfoStore = defineStore('siteInfo', {
         )
         .catch(e => {
           if (e.response) negativeNotification(e.response.data.error)
+          else negativeNotification(`Não foi possível deletar o vídeo`)
           throw e;
       });
     },

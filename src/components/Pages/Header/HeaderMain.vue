@@ -30,7 +30,7 @@
             <q-input filled v-model="edit_video.video_link" label="Link do vídeo" :clearable="true" />
 
             <div>
-              <q-btn :label="edit_video_title == 'Editar vídeo' ? 'Editar' : 'Adicionar'" type="submit" color="primary" />
+              <q-btn :label="edit_video.title == 'Editar vídeo' ? 'Editar' : 'Adicionar'" type="submit" color="primary" />
             </div>
           </q-form>
         </q-card-section>
