@@ -12,6 +12,8 @@ const api = axios.create({
 
 const ENDPOINTS = {
   get_site_info: '',
+  edit_video: 'edit_video',
+  delete_video: '/video',
 }
 
 export const useSiteInfoStore = defineStore('siteInfo', {
@@ -30,6 +32,36 @@ export const useSiteInfoStore = defineStore('siteInfo', {
         )
         .catch(e => {
           negativeNotification(e)
+          throw e;
+      });
+    },
+
+    async editVideo(video_url, text) {
+      return await api.patch(`${ENDPOINTS.edit_video}/`, {
+        video_url: video_url,
+      })
+        .then(response => {
+          if(!response.data.success) throw `Não foi possível ${text} o vídeo`
+          positiveNotification(`Vídeo ${text} com sucesso`)
+          return response.data.success
+          }
+        )
+        .catch(e => {
+          if (e.response) negativeNotification(e.response.data.error)
+          throw e;
+      });
+    },
+
+    async deleteVideo() {
+      return await api.delete(`${ENDPOINTS.delete_video}/`)
+        .then(response => {
+          if(!response.data.success) throw `Não foi possível deletar o vídeo`
+          positiveNotification(`Vídeo deletado com sucesso`)
+          return response.data.success
+          }
+        )
+        .catch(e => {
+          if (e.response) negativeNotification(e.response.data.error)
           throw e;
       });
     },

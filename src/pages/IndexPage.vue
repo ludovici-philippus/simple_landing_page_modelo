@@ -2,8 +2,12 @@
   <q-page class="flex flex-center page q-py-xl">
     <section class="q-my-lg">
       <div class="container">
+        <div v-if="is_admin" class="buttons flex row">
+          <q-btn @click="edit_about_me.modal = true" round color="white" class="q-mb-sm"><q-icon color="black"
+              name="brush" /></q-btn>
+        </div>
         <h2 class="text-center">Sobre mim</h2>
-        <p class="q-mt-md">{{ about_me }}</p>
+        <p class="q-mt-md" v-html="about_me"></p>
       </div>
     </section>
 
@@ -33,6 +37,23 @@
       </div>
     </section>
 
+    <q-dialog v-model="edit_about_me.modal">
+      <q-card style="width: 500px; max-width: 80vw;">
+        <q-card-section class="text-right">
+          <q-btn class="q-mb-md" round color="red" @click="edit_about_me.modal = false">X</q-btn>
+          <q-form greedy @submit="changeAboutMe" class="q-gutter-md">
+
+            <h4 class="text-center text-black">Editar sobre mim</h4>
+            <q-editor v-model="edit_about_me.text" min-height="5rem" />
+
+            <div>
+              <q-btn label="Editar" type="submit" color="primary" />
+            </div>
+          </q-form>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
+
   </q-page>
 </template>
 
@@ -45,14 +66,21 @@ import TestimonyCard from '@components/Utils/TestimonyCard.vue'
 import { useSiteInfoStore } from 'stores/siteInfoStore.js'
 import { useProductsStore } from 'stores/productsStore.js'
 import { useTestimoniesStore } from 'stores/testimoniesStore.js'
+import { useUsersStore } from 'stores/usersStore'
 
 const site_info = useSiteInfoStore()
 const products_store = useProductsStore()
 const testimonies_store = useTestimoniesStore()
 const { about_me } = storeToRefs(site_info)
+const { is_admin } = storeToRefs(useUsersStore())
 
 const ctas = ref([])
 const testimonies = ref([])
+
+const edit_about_me = ref({
+  modal: false,
+  text: about_me,
+})
 
 onMounted(async () => {
   const products = await products_store.getProducts()
@@ -61,6 +89,10 @@ onMounted(async () => {
   ctas.value = products
   testimonies.value = fetched_testimonies
 })
+
+async function changeAboutMe() {
+  console.log("EDITADO")
+}
 
 </script>
 
@@ -77,5 +109,16 @@ onMounted(async () => {
   display: flex;
   height: 20rem;
   gap: 1rem;
+}
+
+.buttons {
+  justify-content: right;
+
+  button {
+    margin: 0;
+    margin-right: 16px;
+    width: 48px;
+    height: 48px;
+  }
 }
 </style>
