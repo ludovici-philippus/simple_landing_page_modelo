@@ -1,11 +1,8 @@
 <template>
   <section class="w100 q-my-lg">
     <div class="container">
-      <div v-if="is_admin" class="buttons flex row">
-        <q-btn @click="edit_about_me.modal = true" round color="white" class="q-mb-sm"><q-icon color="black"
-            name="brush" /></q-btn>
-      </div>
-      <h2 class="text-center">Sobre mim</h2>
+      <h2 class="text-center">Sobre mim <q-btn @click="edit_about_me.modal = true" round color="white"
+          class="q-mb-sm"><q-icon color="black" name="brush" /></q-btn></h2>
       <p class="q-mt-md" v-html="about_me"></p>
     </div>
 
