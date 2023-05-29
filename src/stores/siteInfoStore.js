@@ -5,16 +5,16 @@ import { LocalStorage, SessionStorage } from 'quasar'
 import { positiveNotification, negativeNotification } from '../shared/helpers.js'
 
 const api = axios.create({
-  baseURL: API_PATH()+"site_info/",
+  baseURL: API_PATH()+"site_info",
   headers: {'Authorization': LocalStorage.getItem('user_token') || 0},
   withCredentials: false,
 });
 
 const ENDPOINTS = {
   get_site_info: '',
-  edit_video: 'edit_video',
-  edit_about_me: 'edit_about_me',
-  delete_video: 'video',
+  edit_video: '/edit_video',
+  edit_about_me: '/edit_about_me',
+  delete_video: '/video',
 }
 
 export const useSiteInfoStore = defineStore('siteInfo', {
