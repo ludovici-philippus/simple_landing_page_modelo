@@ -1,7 +1,7 @@
 <template>
   <section class="w100 q-my-lg">
     <div class="container">
-      <h2 class="text-center">Sobre mim <q-btn @click="edit_about_me.modal = true" round color="white"
+      <h2 class="text-center">Sobre mim <q-btn v-if="is_admin" @click="edit_about_me.modal = true" round color="white"
           class="q-mb-sm"><q-icon color="black" name="brush" /></q-btn></h2>
       <p class="q-mt-md" v-html="about_me"></p>
     </div>
@@ -33,7 +33,10 @@ import { storeToRefs } from 'pinia'
 const site_info = useSiteInfoStore()
 const { about_me } = storeToRefs(site_info)
 const props = defineProps({
-  is_admin: Boolean,
+  is_admin: {
+    type: Boolean,
+    default: false
+  }
 })
 
 const temp_about_me = ref('')
