@@ -24,7 +24,7 @@ export const useSiteInfoStore = defineStore('siteInfo', {
   actions: {
 
     async getSiteInfo() {
-      return await api.get(`${ENDPOINTS.get_site_info}/`)
+      return await api.get(`${ENDPOINTS.get_site_info}`)
         .then(response => {
           if(!response.data.success) throw "Não foi possível recuperar os dados dessa página"
           this.about_me = response.data.result[0].about_me
@@ -38,7 +38,7 @@ export const useSiteInfoStore = defineStore('siteInfo', {
     },
 
     async editVideo(video_url, text) {
-      return await api.patch(`${ENDPOINTS.edit_video}/`, {
+      return await api.patch(`${ENDPOINTS.edit_video}`, {
         video_url: video_url,
       })
         .then(response => {
@@ -55,7 +55,7 @@ export const useSiteInfoStore = defineStore('siteInfo', {
     },
 
     async editAboutMe(about_me) {
-      return await api.patch(`${ENDPOINTS.edit_about_me}/`, {
+      return await api.patch(`${ENDPOINTS.edit_about_me}`, {
         about_me: about_me,
       })
         .then(response => {
@@ -72,7 +72,7 @@ export const useSiteInfoStore = defineStore('siteInfo', {
     },
 
     async deleteVideo() {
-      return await api.delete(`${ENDPOINTS.delete_video}/`)
+      return await api.delete(`${ENDPOINTS.delete_video}`)
         .then(response => {
           if(!response.data.success) throw `Não foi possível deletar o vídeo`
           positiveNotification(`Vídeo deletado com sucesso`)

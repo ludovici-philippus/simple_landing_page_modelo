@@ -23,7 +23,7 @@ export const useProductsStore = defineStore('products', {
   actions: {
 
     async getProducts() {
-      return await api.get(`${ENDPOINTS.get_products}/`)
+      return await api.get(`${ENDPOINTS.get_products}`)
         .then(response => {
           if(!response.data.success) throw "Não foi possível recuperar os produtos"
           return response.data.result

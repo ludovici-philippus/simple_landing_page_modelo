@@ -23,20 +23,20 @@ export const useTestimoniesStore = defineStore('testimonies', {
   actions: {
 
     async getTestimonies() {
-      return await api.get(`${ENDPOINTS.get_testimonies}/`)
+      return await api.get(`${ENDPOINTS.get_testimonies}`)
         .then(response => {
             if(!response.data.success) throw "Não foi possível recuperar os depoimentos"
             return response.data.result
           }
         )
         .catch(e => {
-          negativeNotification(e)
+          negativeNotification("Não foi possível recuperar os depoimentos")
           throw e;
       });
     },
 
     async addTestimony(testimony, author) {
-      return await api.post(`${ENDPOINTS.add_testimony}/`, {
+      return await api.post(`${ENDPOINTS.add_testimony}`, {
         testimony: testimony,
         author: author
       })
