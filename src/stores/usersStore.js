@@ -13,6 +13,7 @@ const api = axios.create({
 const ENDPOINTS = {
   get_me: 'me',
   login: 'login',
+  edit_credentials: 'edit_credentials'
 }
 
 export const useUsersStore = defineStore('users', {
@@ -40,6 +41,28 @@ export const useUsersStore = defineStore('users', {
         )
         .catch(e => {
           if (e.response) negativeNotification(e.response.data.error)
+          throw e;
+      });
+    },
+
+    async editCredentials(email, password) {
+      return await api.patch(`${ENDPOINTS.edit_credentials}`, {
+        email: email,
+        password: password,
+      })
+        .then(response => {
+            if(!response.data.success) throw response.data.error
+            this.user_id = response.data.result.id
+            LocalStorage.set('user_token', response.data.result.token)
+            positiveNotification("Credenciais alteradas com sucesso!")
+            setTimeout(() => {
+              window.location.reload()
+            }, 1000);
+          }
+        )
+        .catch(e => {
+          if (e.response) negativeNotification(e.response.data.error)
+          else negativeNotification("Não foi possível alterar as credenciais")
           throw e;
       });
     },

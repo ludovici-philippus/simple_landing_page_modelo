@@ -2,7 +2,7 @@
   <q-header elevated height-hint="98">
     <div class="overlay"></div>
     <section class="container header_head flex justify-between q-my-md">
-      <q-img width="128px" :src="logo" />
+      <q-img width="128px" :src="logo_img" />
     </section>
     <section v-if="video.length > 0" class="container video_call_to_action q-my-xl">
       <hr>
@@ -47,10 +47,10 @@ import { useSiteInfoStore } from 'stores/siteInfoStore.js'
 import { IMAGES_PATH } from '../../../shared/helpers.js'
 import AddNew from '@components/Utils/AddNew.vue'
 
-const logo = ref(null)
 const video = ref('')
 const usersStore = useUsersStore()
 const site_info_store = useSiteInfoStore()
+const { logo } = storeToRefs(site_info_store)
 const { is_admin } = storeToRefs(usersStore)
 
 const edit_video = ref({
@@ -66,12 +66,15 @@ const header_background_image = (image_name) => {
 
 onMounted(async () => {
   const site_info = await site_info_store.getSiteInfo()
-  logo.value = `${IMAGES_PATH()}/${site_info.logo}`
-
 
   document.querySelector('header').style.backgroundImage = header_background_image(site_info.header_bg)
   video.value = site_info.video
 
+})
+
+const logo_img = computed(() => {
+  if (logo && logo.value) return `${IMAGES_PATH()}/${logo.value}`
+  return ''
 })
 
 function openEditVideoModal() {

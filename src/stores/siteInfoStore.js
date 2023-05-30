@@ -14,12 +14,14 @@ const ENDPOINTS = {
   get_site_info: '',
   edit_video: '/edit_video',
   edit_about_me: '/edit_about_me',
+  edit_logo: '/edit_logo',
   delete_video: '/video',
 }
 
 export const useSiteInfoStore = defineStore('siteInfo', {
   state: () => ({
-    about_me: ''
+    about_me: '',
+    logo: '',
   }),
   actions: {
 
@@ -28,6 +30,8 @@ export const useSiteInfoStore = defineStore('siteInfo', {
         .then(response => {
           if(!response.data.success) throw "Não foi possível recuperar os dados dessa página"
           this.about_me = response.data.result[0].about_me
+          this.logo = response.data.result[0].logo
+
           return response.data.result[0]
           }
         )
@@ -69,6 +73,30 @@ export const useSiteInfoStore = defineStore('siteInfo', {
           else negativeNotification(`Não foi possível editar o texto`)
           throw e;
       });
+    },
+
+    async editLogo(data) {
+      return await axios({
+        method: 'post',
+        url: `${API_PATH()}site_info${ENDPOINTS.edit_logo}`,
+        data: data,
+        headers: {
+          'Authorization': LocalStorage.getItem('user_token') || 0,
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(response => {
+          if(!response.data.success) throw "Não foi possível editar a logomarca!"
+
+          console.log("RESPONSE: ", response)
+          this.logo = response.data.result.logo
+          positiveNotification("Logomarca editada com sucesso!")
+          return true
+        })
+        .catch(e => {
+          negativeNotification("Não foi possível editar a logomarca")
+          throw e;
+        });
+
     },
 
     async deleteVideo() {
