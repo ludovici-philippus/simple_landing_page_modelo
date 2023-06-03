@@ -34,7 +34,7 @@
           <q-btn class="q-mb-md" round color="red" @click="edit_testimony.modal = false">X</q-btn>
           <q-form greedy @submit="editTestimony" class="q-gutter-md">
 
-            <h4 class="text-center text-black">Adicionar novo depoimento</h4>
+            <h4 class="text-center text-black">Editar depoimento</h4>
             <q-input type="textarea" filled v-model="edit_testimony.text" label="Depoimento" :clearable="true" />
             <q-input filled v-model="edit_testimony.name" label="Nome do autor do depoimento" :clearable="true" />
 

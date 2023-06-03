@@ -1,7 +1,26 @@
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Questrial&display=swap');
+
+@font-face {
+  font-family: open_sauce;
+  src: url(fonts/open_sauce.ttf);
+}
+
+@font-face {
+  font-family: open_sauce_regular;
+  src: url(fonts/open_sauce_regular.ttf)
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+
+  font-family: "Questrial", sans-serif;
+}
+
+.title_regular {
+  font-family: 'open_sauce_regular', sans-serif;
 }
 
 .container {
@@ -30,16 +49,19 @@ main {
   background-color: $dark-page;
 }
 
-p, h1, h2, h3, h4, h5, h6 {
-  color: white;
+p { color: white; }
+
+h1, h2, h3, h4, h5, h6 {
+ font-family: open_sauce, sans-serif;
+ color: white;
 }
 
 p {
-  font-size: 16px;
+  font-size: 20px;
 }
 
 @media screen and (max-width: 768px) {
-  .w33, .w50 { width: 100%; }
+  .w33, .w50 { width: 100%; margin-bottom: 16px; }
   header {
     min-height: 50vh !important;
   }

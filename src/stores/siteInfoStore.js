@@ -15,8 +15,10 @@ const ENDPOINTS = {
   edit_video: '/edit_video',
   edit_about_me: '/edit_about_me',
   edit_logo: '/edit_logo',
+  edit_header_info: '/edit_header_info',
   delete_video: '/video',
   delete_about_me_image: '/about_me_image',
+  delete_header_image: '/header_image',
 }
 
 export const useSiteInfoStore = defineStore('siteInfo', {
@@ -98,13 +100,35 @@ export const useSiteInfoStore = defineStore('siteInfo', {
       }).then(response => {
           if(!response.data.success) throw "Não foi possível editar a logomarca!"
 
-          console.log("RESPONSE: ", response)
           this.logo = response.data.result.logo
           positiveNotification("Logomarca editada com sucesso!")
           return true
         })
         .catch(e => {
           negativeNotification("Não foi possível editar a logomarca")
+          throw e;
+        });
+
+    },
+
+    async editHeaderInfo(data) {
+      return await axios({
+        method: 'post',
+        url: `${API_PATH()}site_info${ENDPOINTS.edit_header_info}`,
+        data: data,
+        headers: {
+          'Authorization': LocalStorage.getItem('user_token') || 0,
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(response => {
+          if(!response.data.success) throw "Não foi possível editar as informações do cabeçalho!"
+
+          this.logo = response.data.result.logo
+          positiveNotification("Cabeçalho editado com sucesso!")
+          return true
+        })
+        .catch(e => {
+          negativeNotification("Não foi possível editar o cabeçalho")
           throw e;
         });
 
@@ -136,6 +160,21 @@ export const useSiteInfoStore = defineStore('siteInfo', {
         .catch(e => {
           if (e.response) negativeNotification(e.response.data.error)
           else negativeNotification(`Não foi possível deletar a imagem lateral`)
+          throw e;
+      });
+    },
+
+    async deleteHeaderImage() {
+      return await api.delete(`${ENDPOINTS.delete_header_image}`)
+        .then(response => {
+          if(!response.data.success) throw `Não foi possível deletar a imagem do cabeçalho`
+          positiveNotification(`Imagem do cabeçalho deletada com sucesso`)
+          return response.data.success
+          }
+        )
+        .catch(e => {
+          if (e.response) negativeNotification(e.response.data.error)
+          else negativeNotification(`Não foi possível deletar a imagem do cabeçalho`)
           throw e;
       });
     },

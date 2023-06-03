@@ -1,9 +1,28 @@
 <template>
   <q-header elevated height-hint="98">
     <div class="overlay"></div>
-    <section class="container header_head flex justify-between q-my-md">
-      <q-img width="128px" :src="logo_img" />
+    <section class="container header_head flex q-my-md">
+      <div class="flex w50 header-info">
+        <div class="header-logo">
+          <q-img width="128px" :src="logo_img" />
+        </div>
+        <div class="q-ml-xl q-mt-xl header-content">
+          <span class="title_regular">{{ header.site_category }}</span>
+          <h1 style="overflow-wrap: anywhere;" class="title_regular q-mt-xl">{{ header.site_name }}</h1>
+        </div>
+      </div>
+      <div v-if="header.header_image.length > 0" class="w50 header-image q-pa-md relative-position">
+        <q-img :ratio="1" :src="`${get_image(header.header_image)}`" />
+        <div v-if="is_admin" class="buttons absolute-top-right q-mt-md q-mr-md flex column">
+          <q-btn @click="removeHeaderImage" round color="red"><q-icon name="remove" /></q-btn>
+        </div>
+      </div>
+      <div v-if="is_admin" class="buttons absolute-top-right q-mt-md q-mr-md flex column">
+        <q-btn @click="edit_header.modal = true" round color="white" class="q-mb-sm"><q-icon color="black"
+            name="brush" /></q-btn>
+      </div>
     </section>
+
     <section v-if="video.length > 0" class="container video_call_to_action q-my-xl">
       <hr>
       <div class="q-pa-md flex">
@@ -36,6 +55,38 @@
         </q-card-section>
       </q-card>
     </q-dialog>
+
+    <q-dialog v-model="edit_header.modal">
+      <q-card style="width: 500px; max-width: 80vw;">
+        <q-card-section class="text-right">
+          <q-btn class="q-mb-md" round color="red" @click="edit_header.modal = false">X</q-btn>
+          <q-form greedy @submit="changeHeader" class="q-gutter-md">
+
+            <h4 class="text-center text-black">Editar informações do cabeçalho</h4>
+            <q-input filled v-model="edit_header.site_category" label="Categoria do site" :clearable="true" />
+            <q-input filled v-model="edit_header.site_name" label="Nome do site" :clearable="true" />
+
+            <q-file accept=".jpg, .png, .webp, .jpeg, image/*" v-model="edit_header.header_image"
+              label="Imagem de apresentação" filled :clearable="true" :filter="checkFile" @rejected="onRejected">
+              <template v-slot:prepend>
+                <q-icon name="attach_file" />
+              </template>
+            </q-file>
+
+            <q-file accept=".jpg, .png, .webp, .jpeg, image/*" v-model="edit_header.header_background_image"
+              label="Imagem de fundo" filled :clearable="true" :filter="checkFile" @rejected="onRejected">
+              <template v-slot:prepend>
+                <q-icon name="attach_file" />
+              </template>
+            </q-file>
+
+            <div>
+              <q-btn label="Editar" type="submit" color="primary" />
+            </div>
+          </q-form>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
   </q-header>
 </template>
 
@@ -53,29 +104,49 @@ const site_info_store = useSiteInfoStore()
 const { logo } = storeToRefs(site_info_store)
 const { is_admin } = storeToRefs(usersStore)
 
+const header = ref({
+  site_category: '',
+  site_name: '',
+  header_image: '',
+  header_background_image: '',
+})
+
 const edit_video = ref({
   modal: false,
   title: 'Editar Vídeo',
   video_link: '',
 })
 
+const edit_header = ref({
+  modal: false,
+  site_category: '',
+  site_name: '',
+  header_image: '',
+  header_background_image: '',
+})
 
-const header_background_image = (image_name) => {
-  return `/imgs/${image_name}`
+const get_image = (image_name) => {
+  return `${IMAGES_PATH()}/${image_name}`
 }
 
 onMounted(async () => {
-  const site_info = await site_info_store.getSiteInfo()
-
-  document.querySelector('header').style.backgroundImage = header_background_image(site_info.header_bg)
-  video.value = site_info.video
-
+  await updateHeaderInfo()
 })
 
 const logo_img = computed(() => {
   if (logo && logo.value) return `${IMAGES_PATH()}/${logo.value}`
   return ''
 })
+
+async function updateHeaderInfo() {
+  const site_info = await site_info_store.getSiteInfo()
+  video.value = site_info.video
+  header.value.site_name = site_info.site_name
+  header.value.site_category = site_info.site_category
+  header.value.header_image = site_info.header_image
+  header.value.header_background_image = site_info.header_bg
+  document.querySelector('header').style.backgroundImage = `url('${get_image(header.value.header_background_image)}')`
+}
 
 function openEditVideoModal() {
   edit_video.value.title = 'Editar vídeo'
@@ -101,6 +172,31 @@ async function removeVideo() {
   if (await site_info_store.deleteVideo()) video.value = ''
 }
 
+async function removeHeaderImage() {
+  if (await site_info_store.deleteHeaderImage()) header.value.header_image = ''
+}
+
+async function changeHeader() {
+  const formData = new FormData()
+
+  formData.append('site_name', edit_header.value.site_name)
+  formData.append('site_category', edit_header.value.site_category)
+  formData.append('header_bg', edit_header.value.header_background_image)
+  formData.append('header_image', edit_header.value.header_image)
+
+  const edited = await site_info_store.editHeaderInfo(formData)
+  if (!edited) return;
+
+  updateHeaderInfo()
+  edit_header.value = {
+    modal: true,
+    site_category: '',
+    site_name: '',
+    header_image: '',
+    header_background_image: '',
+  }
+}
+
 function formatVideoLink(video) {
   let video_link = video
   video_link = video_link.split("&")[0]
@@ -119,7 +215,6 @@ function formatVideoLink(video) {
 <style lang="scss" scoped>
 header {
   min-height: 80vh;
-  background-image: url('/imgs/bg-header.jpg');
   background-attachment: fixed;
   background-size: cover;
   background-position: center;
@@ -167,6 +262,17 @@ header {
   z-index: 2;
 }
 
+span.title_regular {
+  font-size: 20px;
+}
+
+.header-info {
+
+  .header-content {
+    max-width: 67%;
+  }
+}
+
 @media screen and (max-width: 1100px) {
   .video_call_to_action {
     margin-top: 72px;
@@ -189,6 +295,21 @@ header {
       }
     }
 
+  }
+
+  .header-info {
+    width: 100%;
+
+    .header-content {
+      max-width: 100%;
+      width: 100%;
+      text-align: center;
+    }
+
+  }
+
+  .header-image {
+    width: 100%;
   }
 }
 

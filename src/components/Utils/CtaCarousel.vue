@@ -73,6 +73,7 @@ export default {
   computed: {
     slidesPerView() {
       if (window.innerWidth < 768) return 1
+      else if (window.innerWidth < 1100) return 2
       return this.ctas.length > 5 ? 3 : this.ctas.length
     }
   },

@@ -40,7 +40,7 @@
           <q-btn class="q-mb-md" round color="red" @click="edit_product.modal = false">X</q-btn>
           <q-form greedy @submit="onEditProduct" class="q-gutter-md">
 
-            <h4 class="text-center text-black">Criar novo produto</h4>
+            <h4 class="text-center text-black">Editar produto</h4>
             <q-input filled v-model="edit_product.name" label="Nome do produto" :clearable="true" />
             <q-input filled v-model="edit_product.description" label="Descrição do produto" :clearable="true" />
             <q-input filled v-model="edit_product.purchase_link" label="Link de compra do produto" :clearable="true" />
