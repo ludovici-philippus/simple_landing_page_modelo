@@ -1,5 +1,5 @@
 <template>
-  <section class="q-my-lg w100">
+  <section v-if="(testimonies && testimonies.length > 0) || is_admin" class="q-my-lg w100">
     <div class="container w100">
       <h2 class="text-center">Depoimentos <q-btn v-if="is_admin" @click="add_testimony.modal = true" icon="add" round
           color="primary" /></h2>
