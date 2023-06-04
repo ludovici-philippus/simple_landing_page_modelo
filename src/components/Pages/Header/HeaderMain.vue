@@ -1,43 +1,39 @@
 <template>
   <q-header elevated height-hint="98">
     <div class="overlay"></div>
-    <section class="header_head flex q-my-md">
-      <div class="container">
-        <div class="flex w50 header-info">
-          <div class="header-logo">
-            <q-img width="128px" :src="logo_img" />
-          </div>
-          <div class="header-content">
-            <span class="title_regular">{{ header.site_category }}</span>
-            <h1 style="overflow-wrap: anywhere;" class="title_regular q-mt-xl">{{ header.site_name }}</h1>
-          </div>
+    <section class="container header_head flex">
+      <div class="flex w50 header-info">
+        <div class="header-logo">
+          <q-img width="128px" :src="logo_img" />
         </div>
-        <div v-if="header.header_image.length > 0" class="w50 header-image q-pa-md relative-position">
-          <q-img :ratio="1" :src="`${get_image(header.header_image)}`" />
-          <div v-if="is_admin" class="buttons absolute-top-right q-mt-md q-mr-md flex column">
-            <q-btn @click="removeHeaderImage" round color="red"><q-icon name="remove" /></q-btn>
-          </div>
+        <div class="header-content">
+          <span class="title_regular">{{ header.site_category }}</span>
+          <h1 style="overflow-wrap: anywhere;" class="title_regular q-mt-xl">{{ header.site_name }}</h1>
         </div>
+      </div>
+      <div v-if="header.header_image.length > 0" class="w50 header-image q-pa-md relative-position">
+        <q-img :ratio="1" :src="`${get_image(header.header_image)}`" />
         <div v-if="is_admin" class="buttons absolute-top-right q-mt-md q-mr-md flex column">
-          <q-btn @click="edit_header.modal = true" round color="white" class="q-mb-sm"><q-icon color="black"
-              name="brush" /></q-btn>
+          <q-btn @click="removeHeaderImage" round color="red"><q-icon name="remove" /></q-btn>
         </div>
+      </div>
+      <div v-if="is_admin" class="buttons absolute-top-right q-mt-md q-mr-md flex column">
+        <q-btn @click="edit_header.modal = true" round color="white" class="q-mb-sm"><q-icon color="black"
+            name="brush" /></q-btn>
       </div>
     </section>
 
-    <section v-if="video.length > 0" class="video_call_to_action q-my-xl">
-      <div class="container">
-        <hr>
-        <div class="q-pa-md flex">
-          <q-video :ratio="16 / 9" :src="video" />
-        </div>
-        <div v-if="is_admin" class="buttons absolute-right flex column">
-          <q-btn @click="openEditVideoModal" round color="white" class="q-mb-sm"><q-icon color="black"
-              name="brush" /></q-btn>
-          <q-btn @click="removeVideo" round color="red"><q-icon name="remove" /></q-btn>
-        </div>
-        <hr>
+    <section v-if="video.length > 0" class="container video_call_to_action q-my-xl">
+      <hr>
+      <div class="q-pa-md flex">
+        <q-video :ratio="16 / 9" :src="video" />
       </div>
+      <div v-if="is_admin" class="buttons absolute-right flex column">
+        <q-btn @click="openEditVideoModal" round color="white" class="q-mb-sm"><q-icon color="black"
+            name="brush" /></q-btn>
+        <q-btn @click="removeVideo" round color="red"><q-icon name="remove" /></q-btn>
+      </div>
+      <hr>
     </section>
     <section style="" class="container add-new-video q-my-md" v-else-if="is_admin">
       <AddNew class="w100 full-height q-mt-lg z-top" @action="openAddVideoModal" text="Adicionar vídeo de apresentação" />
@@ -237,6 +233,7 @@ header {
 .header_head {
   position: relative;
   z-index: 2;
+  margin: 16px auto;
 }
 
 .video_call_to_action {
