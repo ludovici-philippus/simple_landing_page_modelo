@@ -6,7 +6,7 @@
         <div class="header-logo">
           <q-img width="128px" :src="logo_img" />
         </div>
-        <div class="q-ml-xl q-mt-xl header-content">
+        <div class="header-content">
           <span class="title_regular">{{ header.site_category }}</span>
           <h1 style="overflow-wrap: anywhere;" class="title_regular q-mt-xl">{{ header.site_name }}</h1>
         </div>
@@ -63,8 +63,8 @@
           <q-form greedy @submit="changeHeader" class="q-gutter-md">
 
             <h4 class="text-center text-black">Editar informações do cabeçalho</h4>
-            <q-input filled v-model="edit_header.site_category" label="Categoria do site" :clearable="true" />
-            <q-input filled v-model="edit_header.site_name" label="Nome do site" :clearable="true" />
+            <q-input filled v-model="edit_header.site_category" label="Subtítulo do site" :clearable="true" />
+            <q-input filled v-model="edit_header.site_name" label="Título do site" :clearable="true" />
 
             <q-file accept=".jpg, .png, .webp, .jpeg, image/*" v-model="edit_header.header_image"
               label="Imagem de apresentação" filled :clearable="true" :filter="checkFile" @rejected="onRejected">
@@ -270,6 +270,8 @@ span.title_regular {
 
   .header-content {
     max-width: 67%;
+    margin-top: 32px;
+    margin-left: 32px;
   }
 }
 
@@ -279,12 +281,10 @@ span.title_regular {
 
     .buttons {
       justify-content: left;
-      left: 50%;
+      left: 16px;
       top: -56px;
-      transform: translateX(-50%);
       flex-direction: row;
       height: 32px;
-      width: 100%;
       margin-left: 16px;
 
       button {
@@ -304,6 +304,7 @@ span.title_regular {
       max-width: 100%;
       width: 100%;
       text-align: center;
+      margin: 0;
     }
 
   }

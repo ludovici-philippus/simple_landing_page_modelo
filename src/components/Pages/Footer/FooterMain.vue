@@ -1,31 +1,55 @@
 <template>
   <div>
-    <q-footer class="bg-dark text-white justify-center flex items-center q-pa-md">
-      <p style="margin: 0">Todos os direitos reservados</p>
-      <q-btn v-if="!is_admin" @click="login_modal = true" class="q-ml-md" color="white" text-color="black">Login</q-btn>
-      <q-btn-dropdown class="q-ml-md" v-else text-color="black" color="white" label="Opções" dropdown-icon="expand_less">
-        <q-list>
+    <q-footer class="bg-dark text-white justify-between flex items-center q-pa-md">
+      <div class="w33"></div>
+      <div class='w33 flex items-center justify-center'>
+        <p style="margin: 0">Todos os direitos reservados</p>
+        <q-btn v-if="!is_admin" @click="login_modal = true" class="q-ml-md" color="white" text-color="black">Login</q-btn>
+        <q-btn-dropdown class="q-ml-md" v-else text-color="black" color="white" label="Opções"
+          dropdown-icon="expand_less">
+          <q-list>
 
-          <q-item clickable v-close-popup @click="change_logo.modal = true">
-            <q-item-section>
-              <q-item-label>Alterar logomarca</q-item-label>
-            </q-item-section>
-          </q-item>
+            <q-item clickable v-close-popup @click="edit_social_midias.modal = true">
+              <q-item-section>
+                <q-item-label>Alterar links das redes sociais</q-item-label>
+              </q-item-section>
+            </q-item>
 
-          <q-item clickable v-close-popup @click="change_credentials.modal = true">
-            <q-item-section>
-              <q-item-label>Alterar informações de acesso</q-item-label>
-            </q-item-section>
-          </q-item>
+            <q-item clickable v-close-popup @click="change_logo.modal = true">
+              <q-item-section>
+                <q-item-label>Alterar logomarca</q-item-label>
+              </q-item-section>
+            </q-item>
 
-          <q-item clickable v-close-popup @click="signOut">
-            <q-item-section>
-              <q-item-label>Deslogar</q-item-label>
-            </q-item-section>
-          </q-item>
+            <q-item clickable v-close-popup @click="change_credentials.modal = true">
+              <q-item-section>
+                <q-item-label>Alterar informações de acesso</q-item-label>
+              </q-item-section>
+            </q-item>
 
-        </q-list>
-      </q-btn-dropdown>
+            <q-item clickable v-close-popup @click="signOut">
+              <q-item-section>
+                <q-item-label>Deslogar</q-item-label>
+              </q-item-section>
+            </q-item>
+
+          </q-list>
+        </q-btn-dropdown>
+      </div>
+      <div class="w33 flex justify-center">
+        <q-btn class="q-mr-md" color="primary" target="_blank" round
+          v-if="social_midias.instagram && social_midias.instagram.length > 0" :href="social_midias.instagram">
+          <q-icon name="fa-solid fa-brands fa-instagram" />
+        </q-btn>
+        <q-btn class="q-mr-md" color="primary" target="_blank" round
+          v-if="social_midias.whatsapp && social_midias.whatsapp.length > 0" :href="social_midias.whatsapp_url">
+          <q-icon name="fa-solid fa-brands fa-whatsapp" />
+        </q-btn>
+        <q-btn color="primary" target="_blank" round v-if="social_midias.facebook && social_midias.facebook.length > 0"
+          :href="social_midias.facebook">
+          <q-icon name="fa-solid fa-brands fa-facebook" />
+        </q-btn>
+      </div>
     </q-footer>
 
     <q-dialog v-model="login_modal">
@@ -83,6 +107,33 @@
       </q-card>
     </q-dialog>
 
+    <q-dialog v-model="edit_social_midias.modal">
+      <q-card style="width: 500px; max-width: 80vw;">
+        <q-card-section class="text-right">
+          <q-btn class="q-mb-md" round color="red" @click="edit_social_midias.modal = false">X</q-btn>
+          <q-form greedy @submit="editSocialMidias" class="q-gutter-md">
+
+            <h4 class="text-center text-black">Alterar links de redes sociais</h4>
+            <q-input lazy-rules v-model="edit_social_midias.instagram" filled
+              hint="Novo perfil do instagram (Deixe vazio para remover o botão)" placeholder="Instagram" />
+
+            <q-input lazy-rules mask="+## (##) # ####-####" v-model="edit_social_midias.whatsapp" filled
+              hint="Novo número do whatsapp (Deixe vazio para remover o botão)" placeholder="Whatsapp" />
+
+            <q-input lazy-rules v-model="edit_social_midias.facebook" filled
+              hint="Novo perfil do facebook (Deixe vazio para remover o botão)" placeholder="Facebook" />
+
+            <q-input lazy-rules v-model="edit_social_midias.whatsapp_text" type="textarea" filled
+              hint="Mensagem do botão de whatsapp" placeholder="Mensagem do whatsapp" />
+
+            <div>
+              <q-btn type="submit" label="Editar" color="primary" />
+            </div>
+          </q-form>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
+
     <q-dialog v-model="change_logo.modal">
       <q-card style="width: 500px; max-width: 80vw;">
         <q-card-section class="text-right">
@@ -108,9 +159,10 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useUsersStore } from 'stores/usersStore.js'
-import { useSiteInfoStore } from 'stores/siteInfoStore'
+import { useSiteInfoStore } from 'stores/siteInfoStore.js'
+import { useSocialMidiasStore } from 'stores/socialMidiasStore.js'
 import { storeToRefs } from 'pinia'
 import { LocalStorage } from 'quasar'
 
@@ -130,10 +182,52 @@ const change_logo = ref({
   image: null,
 })
 
+const social_midias = ref({
+  instagram: '',
+  whatsapp: '',
+  whatsapp_url: '',
+  facebook: '',
+  whatsapp_text: '',
+})
+
+const edit_social_midias = ref({
+  modal: false,
+  instagram: '',
+  whatsapp: '',
+  facebook: '',
+  whatsapp_text: '',
+})
+
 const is_pwd = ref(true)
 const users_store = useUsersStore()
 const site_info_store = useSiteInfoStore()
+const social_midias_store = useSocialMidiasStore()
 const { is_admin } = storeToRefs(users_store)
+
+onMounted(async () => {
+  await updateSocialMidias()
+})
+
+async function updateSocialMidias() {
+  const midias = await social_midias_store.getSocialMidias()
+
+  social_midias.value.instagram = midias.instagram
+  social_midias.value.whatsapp = midias.whatsapp
+  social_midias.value.whatsapp_url = midias.whatsapp_url
+  social_midias.value.whatsapp_text = midias.whatsapp_text
+  social_midias.value.facebook = midias.facebook
+  console.log("UPDATED!")
+  console.log("NEW WHATSAPP URL: ", social_midias.value.whatsapp_url)
+
+  setEditSocialMediasFields()
+}
+
+function setEditSocialMediasFields() {
+  edit_social_midias.value.instagram = social_midias.value.instagram?.split("https://instagram.com/")[1]
+  edit_social_midias.value.whatsapp = social_midias.value.whatsapp
+  edit_social_midias.value.whatsapp_text = social_midias.value.whatsapp_text
+  edit_social_midias.value.facebook = social_midias.value.facebook?.split("https://facebook.com/")[1]
+}
 
 async function onSubmit() {
   await users_store.login(email.value, password.value)
@@ -143,13 +237,23 @@ async function onChangeCredentials() {
   await users_store.editCredentials(change_credentials.value.email, change_credentials.value.password)
 }
 
+async function editSocialMidias() {
+  await social_midias_store.editSocialMidias(
+    edit_social_midias.value.instagram,
+    edit_social_midias.value.whatsapp,
+    edit_social_midias.value.facebook,
+    edit_social_midias.value.whatsapp_text,
+  )
+  await updateSocialMidias()
+}
+
 async function changeLogo() {
   const formData = new FormData()
 
   formData.append('image', change_logo.value.image)
 
   const changed = await site_info_store.editLogo(formData)
-  if (!created) return;
+  if (!changed) return;
 
   await site_info_store.getSiteInfo()
 }
