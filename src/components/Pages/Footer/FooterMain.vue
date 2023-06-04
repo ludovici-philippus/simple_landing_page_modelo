@@ -216,8 +216,6 @@ async function updateSocialMidias() {
   social_midias.value.whatsapp_url = midias.whatsapp_url
   social_midias.value.whatsapp_text = midias.whatsapp_text
   social_midias.value.facebook = midias.facebook
-  console.log("UPDATED!")
-  console.log("NEW WHATSAPP URL: ", social_midias.value.whatsapp_url)
 
   setEditSocialMediasFields()
 }

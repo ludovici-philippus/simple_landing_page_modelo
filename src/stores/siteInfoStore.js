@@ -33,11 +33,9 @@ export const useSiteInfoStore = defineStore('siteInfo', {
       return await api.get(`${ENDPOINTS.get_site_info}`)
         .then(response => {
           if(!response.data.success) throw "Não foi possível recuperar os dados dessa página"
-          console.log("RESPONSE: ", response.data.result)
           this.about_me = response.data.result[0].about_me
           this.image = response.data.result[0].about_me_image
           this.logo = response.data.result[0].logo
-          console.log("IMAGE: ", this.image)
 
           return response.data.result[0]
           }
