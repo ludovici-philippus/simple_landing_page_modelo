@@ -23,20 +23,22 @@
       </div>
     </section>
 
-    <section v-if="video.length > 0" class="container video_call_to_action q-my-xl">
-      <hr>
-      <div class="q-pa-md flex">
-        <q-video :ratio="16 / 9" :src="video" />
+    <section class="container video_call_to_action q-my-xl">
+      <div v-if="video.length > 0">
+        <hr>
+        <div class="q-pa-md flex">
+          <q-video :ratio="16 / 9" :src="video" />
+        </div>
+        <div v-if="is_admin" class="buttons absolute-right flex column">
+          <q-btn @click="openEditVideoModal" round color="white" class="q-mb-sm"><q-icon color="black"
+              name="brush" /></q-btn>
+          <q-btn @click="removeVideo" round color="red"><q-icon name="remove" /></q-btn>
+        </div>
+        <hr>
       </div>
-      <div v-if="is_admin" class="buttons absolute-right flex column">
-        <q-btn @click="openEditVideoModal" round color="white" class="q-mb-sm"><q-icon color="black"
-            name="brush" /></q-btn>
-        <q-btn @click="removeVideo" round color="red"><q-icon name="remove" /></q-btn>
+      <div v-else class="add-new-video q-my-md full-height">
+        <AddNew class="w100 q-my-lg z-top q-py-md" @action="openAddVideoModal" text="Adicionar vídeo de apresentação" />
       </div>
-      <hr>
-    </section>
-    <section style="" class="container add-new-video q-my-md" v-else-if="is_admin">
-      <AddNew class="w100 full-height q-mt-lg z-top" @action="openAddVideoModal" text="Adicionar vídeo de apresentação" />
     </section>
 
     <q-dialog v-model="edit_video.modal">
@@ -258,12 +260,7 @@ header {
 }
 
 .add-new-video {
-  position: absolute;
-  width: 80%;
-  height: 60%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  width: 100%;
   z-index: 2;
 }
 
