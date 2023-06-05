@@ -3,7 +3,7 @@
     <div class="container">
       <h2 class="text-center">Sobre mim <q-btn v-if="is_admin" @click="edit_about_me.modal = true" round color="white"
           class="q-mb-sm"><q-icon color="black" name="brush" /></q-btn></h2>
-      <div class="flex justify-between">
+      <div class="flex justify-between about-me">
         <div :class="{ w50: has_image }">
           <p class="q-mt-md" v-html="about_me"></p>
         </div>

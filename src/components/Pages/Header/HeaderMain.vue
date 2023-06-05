@@ -207,6 +207,10 @@ function formatVideoLink(video) {
     const video_id = video_link.split('/youtu.be/')[1]
     video_link = `https://www.youtube.com/embed/${video_id}`
   }
+  else if (video_link.includes('drive.google.com')) {
+    const video_id = video_link.split('file/d/')[1].split('/')[0]
+    return `https://drive.google.com/file/d/${video_id}/preview`
+  }
   return video_link
 }
 

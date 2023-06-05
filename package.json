@@ -1,8 +1,8 @@
 {
   "name": "simple-landing-page",
   "version": "0.0.1",
-  "description": "Uma landing page simples",
-  "productName": "Simple Landing Page",
+  "description": "Um estúdio para empreendedores",
+  "productName": "Estúdio Empreendedor",
   "author": "Luis Felipe <202makertv@gmail.com>",
   "private": true,
   "scripts": {
