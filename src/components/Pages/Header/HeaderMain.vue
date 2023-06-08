@@ -23,8 +23,8 @@
       </div>
     </section>
 
-    <section class="container video_call_to_action q-my-xl">
-      <div v-if="video.length > 0">
+    <section class="container q-my-xl">
+      <div v-if="video.length > 0" class="video_call_to_action">
         <hr>
         <div class="q-pa-md flex">
           <q-video :ratio="16 / 9" :src="video" />
@@ -36,7 +36,7 @@
         </div>
         <hr>
       </div>
-      <div v-else class="add-new-video q-my-md full-height">
+      <div v-else-if="is_admin" class="add-new-video q-my-md full-height">
         <AddNew class="w100 q-my-lg z-top q-py-md" @action="openAddVideoModal" text="Adicionar vídeo de apresentação" />
       </div>
     </section>
@@ -68,7 +68,7 @@
             <q-input filled v-model="edit_header.site_category" label="Subtítulo do site" :clearable="true" />
             <q-input filled v-model="edit_header.site_name" label="Título do site" :clearable="true" />
 
-            <q-file accept=".jpg, .png, .webp, .jpeg, image/*" v-model="edit_header.header_image"
+            <q-file accept=".jpg, .png, .webp, .jpeg, .gif, image/*" v-model="edit_header.header_image"
               label="Imagem de apresentação" filled :clearable="true" :filter="checkFile" @rejected="onRejected">
               <template v-slot:prepend>
                 <q-icon name="attach_file" />

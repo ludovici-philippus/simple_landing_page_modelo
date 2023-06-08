@@ -1,8 +1,8 @@
 <template>
   <section class="w100 q-my-lg">
     <div class="container">
-      <h2 class="text-center">Sobre mim <q-btn v-if="is_admin" @click="edit_about_me.modal = true" round color="white"
-          class="q-mb-sm"><q-icon color="black" name="brush" /></q-btn></h2>
+      <h2 class="text-center">{{ about_me_label }} <q-btn v-if="is_admin" @click="edit_about_me.modal = true" round
+          color="white" class="q-mb-sm"><q-icon color="black" name="brush" /></q-btn></h2>
       <div class="flex justify-between about-me">
         <div :class="{ w50: has_image }">
           <p class="q-mt-md" v-html="about_me"></p>
@@ -42,12 +42,15 @@
 
 <script setup>
 import { useSiteInfoStore } from 'stores/siteInfoStore.js'
+import { useConfigsStore } from 'stores/configsStore.js'
 import { ref, defineProps, watch, computed, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { IMAGES_PATH } from 'src/shared/helpers';
 
 const site_info = useSiteInfoStore()
+const config_store = useConfigsStore()
 const { about_me, image } = storeToRefs(site_info)
+const { about_me_label } = storeToRefs(config_store)
 const props = defineProps({
   is_admin: {
     type: Boolean,
@@ -62,7 +65,7 @@ const edit_about_me = ref({
   image: '',
 })
 
-onMounted(() => {
+onMounted(async () => {
   temp_about_me.value = site_info.about_me
 })
 

@@ -1,8 +1,8 @@
 <template>
   <section class="q-my-lg w100">
     <div class="container w100">
-      <h2 class="text-center">Produtos <q-btn v-if="is_admin" @click="add_product.modal = true" icon="add" round
-          color="primary" />
+      <h2 class="text-center">{{ product_label }} <q-btn v-if="is_admin" @click="add_product.modal = true" icon="add"
+          round color="primary" />
       </h2>
       <div class="products flex justify-between w100 q-mt-lg">
         <CtaCarousel @editProduct="editProduct" @deleteProduct="deleteProduct" :is_admin="is_admin" :ctas="ctas" />
@@ -66,11 +66,15 @@
 import { ref, onMounted, defineProps } from 'vue'
 import CtaCarousel from '@components/Utils/CtaCarousel.vue'
 import { useProductsStore } from 'stores/productsStore.js'
+import { useConfigsStore } from 'stores/configsStore.js'
+import { storeToRefs } from 'pinia'
 
 const props = defineProps({
   is_admin: Boolean,
 })
 
+const config_store = useConfigsStore()
+const { product_label } = storeToRefs(config_store)
 const products_store = useProductsStore()
 const ctas = ref([])
 const add_product = ref({

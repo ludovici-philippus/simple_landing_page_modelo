@@ -9,6 +9,12 @@
           dropdown-icon="expand_less">
           <q-list>
 
+            <q-item clickable v-close-popup @click="change_labels.modal = true">
+              <q-item-section>
+                <q-item-label>Alterar subtítulos</q-item-label>
+              </q-item-section>
+            </q-item>
+
             <q-item clickable v-close-popup @click="edit_social_midias.modal = true">
               <q-item-section>
                 <q-item-label>Alterar links das redes sociais</q-item-label>
@@ -155,6 +161,33 @@
         </q-card-section>
       </q-card>
     </q-dialog>
+
+    <q-dialog v-model="change_labels.modal">
+      <q-card style="width: 500px; max-width: 80vw;">
+        <q-card-section class="text-right">
+          <q-btn class="q-mb-md" round color="red" @click="change_labels.modal = false">X</q-btn>
+          <q-form greedy @submit="changeLabels" class="q-gutter-md">
+
+            <div class="text-center">
+              <h5 class="text-center text-black">Título da seção sobre</h5>
+              <q-radio v-model="change_labels.about_me_label" val="Sobre mim" label="Sobre mim" />
+              <q-radio v-model="change_labels.about_me_label" val="Sobre nós" label="Sobre nós" />
+            </div>
+
+            <div class="text-center">
+              <h5 class="text-center text-black">Título da seção de chamada pra ação</h5>
+              <q-radio v-model="change_labels.products_label" val="Produtos" label="Produtos" />
+              <q-radio v-model="change_labels.products_label" val="Serviços" label="Serviços" />
+            </div>
+
+            <div>
+              <q-btn label="Editar" type="submit" color="primary" />
+            </div>
+          </q-form>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
+
   </div>
 </template>
 
@@ -163,12 +196,16 @@ import { ref, onMounted } from 'vue'
 import { useUsersStore } from 'stores/usersStore.js'
 import { useSiteInfoStore } from 'stores/siteInfoStore.js'
 import { useSocialMidiasStore } from 'stores/socialMidiasStore.js'
+import { useConfigsStore } from 'stores/configsStore'
 import { storeToRefs } from 'pinia'
 import { LocalStorage } from 'quasar'
 
 const login_modal = ref(false)
 const email = ref()
 const password = ref()
+const products_label = ref('Produtos')
+const about_me_label = ref('Sobre mim')
+const configs_store = useConfigsStore()
 
 const change_credentials = ref({
   modal: false,
@@ -198,6 +235,12 @@ const edit_social_midias = ref({
   whatsapp_text: '',
 })
 
+const change_labels = ref({
+  modal: false,
+  products_label: products_label.value,
+  about_me_label: about_me_label.value,
+})
+
 const is_pwd = ref(true)
 const users_store = useUsersStore()
 const site_info_store = useSiteInfoStore()
@@ -206,6 +249,12 @@ const { is_admin } = storeToRefs(users_store)
 
 onMounted(async () => {
   await updateSocialMidias()
+
+  about_me_label.value = await configs_store.getAboutMeLabel()
+  products_label.value = await configs_store.getProductLabel()
+
+  change_labels.value.about_me_label = about_me_label.value
+  change_labels.value.products_label = products_label.value
 })
 
 async function updateSocialMidias() {
@@ -254,6 +303,17 @@ async function changeLogo() {
   if (!changed) return;
 
   await site_info_store.getSiteInfo()
+}
+
+async function changeLabels() {
+  const new_about_me = change_labels.value.about_me_label
+  const new_product = change_labels.value.products_label
+
+  if (new_product != products_label.value) await configs_store.editProductLabel(new_product)
+  else if (new_about_me != about_me_label.value) await configs_store.editAboutMeLabel(new_about_me)
+
+  about_me_label.value = await configs_store.getAboutMeLabel()
+  products_label.value = await configs_store.getProductLabel()
 }
 
 function checkFile(files) {
