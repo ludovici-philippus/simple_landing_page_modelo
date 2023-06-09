@@ -3,7 +3,8 @@
     <div class="container text-center">
       <h2 class="q-mb-md">Dúvidas Frequentes (F.A.Q) <q-btn v-if="is_admin" @click="add_faq.modal = true" icon="add" round
           color="primary" /></h2>
-      <div v-for="(faq, index) in faqs" :key="index" class="q-pa-md" style="max-width: 800px; margin: 0 auto;">
+      <div v-for="(faq, index) in faqs" :key="index" class="q-pa-md relative-position"
+        style="max-width: 800px; margin: 0 auto;">
         <q-expansion-item class="w100 shadow-1 overflow-hidden" style="border-radius: 15px 2px 15px 0" icon="help"
           :label="faq.question" header-class="bg-primary text-white" expand-icon-class="text-white">
           <q-card>
@@ -12,6 +13,11 @@
             </q-card-section>
           </q-card>
         </q-expansion-item>
+        <div v-if="is_admin" class="buttons absolute-right flex column">
+          <q-btn @click="openEditModal(faq.id, faq.question, faq.answer)" round color="white" class="q-mr-sm"><q-icon
+              color="black" name="brush" /></q-btn>
+          <q-btn @click="deleteFaq(faq.id)" round color="red"><q-icon name="remove" /></q-btn>
+        </div>
       </div>
     </div>
 
@@ -32,6 +38,26 @@
         </q-card-section>
       </q-card>
     </q-dialog>
+
+    <q-dialog v-model="edit_faq.modal">
+      <q-card style="width: 500px; max-width: 80vw;">
+        <q-card-section class="text-right">
+          <q-btn class="q-mb-md" round color="red" @click="edit_faq.modal = false">X</q-btn>
+          <q-form greedy @submit="editFaq" class="q-gutter-md">
+
+            <h4 class="text-center text-black">Editar pergunta</h4>
+            <q-input filled v-model="edit_faq.question" label="Pergunta" :clearable="true" />
+            <q-input filled v-model="edit_faq.answer" label="Resposta" :clearable="true" />
+
+            <div>
+              <q-btn label="Editar" type="submit" color="primary" />
+            </div>
+          </q-form>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
+
+
 
   </section>
 </template>
@@ -55,6 +81,13 @@ const add_faq = ref({
   answer: '',
 })
 
+const edit_faq = ref({
+  modal: false,
+  question: '',
+  answer: '',
+  id: '',
+})
+
 onMounted(async () => {
   await getFaqs()
 })
@@ -68,6 +101,31 @@ async function addFaq() {
   await getFaqs()
 }
 
+function openEditModal(id, question, answer) {
+  edit_faq.value.id = id
+  edit_faq.value.question = question
+  edit_faq.value.answer = answer
+  edit_faq.value.modal = true
+}
+
+async function editFaq() {
+  await faq_store.editFaq(edit_faq.value.id, edit_faq.value.question, edit_faq.value.answer)
+  await getFaqs()
+}
+
+async function deleteFaq(id) {
+  if (!confirm('Você tem certeza que deseja deletar essa pergunta frequente?')) return
+
+  await faq_store.deleteFaq(id)
+  await getFaqs()
+}
+
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.buttons {
+  width: 32px;
+  height: 32px;
+  right: 64px;
+}
+</style>
