@@ -1,5 +1,5 @@
 <template>
-  <section class="q-my-md w100" v-if="faqs.length > 0">
+  <section class="q-my-md w100" v-if="faqs.length > 0 || is_admin">
     <div class="container text-center">
       <h2 class="q-mb-md">Dúvidas Frequentes (F.A.Q) <q-btn v-if="is_admin" @click="add_faq.modal = true" icon="add" round
           color="primary" /></h2>
