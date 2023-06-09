@@ -1,25 +1,33 @@
 <template>
   <q-header elevated height-hint="98">
     <div class="overlay"></div>
-    <section class="container header_head flex">
-      <div class="flex w50 header-info">
-        <div class="header-logo">
-          <q-img width="128px" :src="logo_img" />
+
+    <section class="header_head flex container">
+      <div class="flex w100 header-info items-center">
+        <div class="header-logo flex w50">
+          <q-img style="max-width: 60%; width: 100%" :src="logo_img" />
         </div>
-        <div class="header-content">
+        <div class="header-content w50">
           <span class="title_regular">{{ header.site_category }}</span>
-          <h1 style="overflow-wrap: anywhere;" class="title_regular q-mt-xl">{{ header.site_name }}</h1>
-        </div>
-      </div>
-      <div v-if="header.header_image.length > 0" class="w50 header-image q-pa-md relative-position">
-        <q-img :ratio="1" :src="`${get_image(header.header_image)}`" />
-        <div v-if="is_admin" class="buttons absolute-top-right q-mt-md q-mr-md flex column">
-          <q-btn @click="removeHeaderImage" round color="red"><q-icon name="remove" /></q-btn>
         </div>
       </div>
       <div v-if="is_admin" class="buttons absolute-top-right q-mt-md q-mr-md flex column">
         <q-btn @click="edit_header.modal = true" round color="white" class="q-mb-sm"><q-icon color="black"
             name="brush" /></q-btn>
+      </div>
+    </section>
+
+    <section class="container relative-position z-top flex w100 items-center">
+
+      <div style="width: 66%">
+        <h1 style="overflow-wrap: anywhere;" class="title_regular">{{ header.site_name }}</h1>
+      </div>
+
+      <div v-if="header.header_image.length > 0" class="w33 header-image q-pa-md relative-position">
+        <q-img :ratio="1" :src="`${get_image(header.header_image)}`" />
+        <div v-if="is_admin" class="buttons absolute-top-right q-mt-md q-mr-md flex column">
+          <q-btn @click="removeHeaderImage" round color="red"><q-icon name="remove" /></q-btn>
+        </div>
       </div>
     </section>
 
@@ -218,6 +226,12 @@ function formatVideoLink(video) {
 
 </script>
 
+<style lang="scss">
+.header-logo .q-img .q-img__container img {
+  height: auto;
+}
+</style>
+
 <style lang="scss" scoped>
 header {
   min-height: 80vh;
@@ -266,15 +280,6 @@ header {
 
 span.title_regular {
   font-size: 20px;
-}
-
-.header-info {
-
-  .header-content {
-    max-width: 67%;
-    margin-top: 32px;
-    margin-left: 32px;
-  }
 }
 
 @media screen and (max-width: 1100px) {
