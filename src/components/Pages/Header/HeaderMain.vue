@@ -5,7 +5,7 @@
     <section class="header_head flex container">
       <div class="flex w100 header-info items-center">
         <div class="header-logo flex w50">
-          <q-img style="max-width: 60%; width: 100%" :src="logo_img" />
+          <q-img fit style="max-width: 60%; width: 100%; max-height: 120px;" :src="logo_img" />
         </div>
         <div class="header-content w50">
           <span class="title_regular">{{ header.site_category }}</span>
@@ -228,7 +228,8 @@ function formatVideoLink(video) {
 
 <style lang="scss">
 .header-logo .q-img .q-img__container img {
-  height: auto;
+  object-fit: contain;
+
 }
 </style>
 
