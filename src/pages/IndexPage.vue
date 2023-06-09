@@ -3,6 +3,7 @@
     <AboutMe :is_admin="is_admin" />
     <ProductsComponent :is_admin="is_admin" />
     <TestimoniesComponent :is_admin="is_admin" />
+    <FaqComponent :is_admin="is_admin" question="Hello world" answer="Olá, mundo" />
   </q-page>
 </template>
 
@@ -11,6 +12,7 @@ import { storeToRefs } from 'pinia'
 import AboutMe from '@components/Pages/AboutMe.vue'
 import ProductsComponent from '@components/Pages/ProductsComponent.vue'
 import TestimoniesComponent from '@components/Pages/TestimoniesComponent.vue'
+import FaqComponent from '@components/Pages/FaqComponent.vue'
 
 import { useUsersStore } from 'stores/usersStore'
 

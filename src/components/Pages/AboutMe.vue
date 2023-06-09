@@ -3,11 +3,11 @@
     <div class="container">
       <h2 class="text-center">{{ about_me_label }} <q-btn v-if="is_admin" @click="edit_about_me.modal = true" round
           color="white" class="q-mb-sm"><q-icon color="black" name="brush" /></q-btn></h2>
-      <div class="flex justify-between about-me">
+      <div class="flex justify-between about-me q-mt-md">
         <div :class="{ w50: has_image }">
           <p class="q-mt-md" v-html="about_me"></p>
         </div>
-        <div class="w50 relative-position" v-if="has_image">
+        <div class="w50 q-mt-lg relative-position" v-if="has_image">
           <q-img :src="image_about_me" />
           <q-btn class="absolute-right remove-image-button" v-if="is_admin" @click="removeImage" round color="red"><q-icon
               name="remove" /></q-btn>

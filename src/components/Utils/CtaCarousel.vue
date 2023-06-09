@@ -100,7 +100,7 @@ export default {
 }
 
 .cta-card-img .q-img__container img {
-  border-radius: 50% !important;
+  border-radius: 36px !important;
 }
 </style>
 
