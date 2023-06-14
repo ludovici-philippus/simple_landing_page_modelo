@@ -19,7 +19,7 @@
 
     <section class="container relative-position z-top flex w100 items-center">
 
-      <div style="width: 66%">
+      <div class="header-title-container">
         <h1 style="overflow-wrap: anywhere;" class="title_regular">{{ header.site_name }}</h1>
       </div>
 
@@ -241,6 +241,10 @@ header {
   background-position: center;
 }
 
+.header-title-container {
+  width: 66%;
+}
+
 .overlay {
   background-color: rgba(0, 0, 0, 0.8);
   width: 100%;
@@ -284,6 +288,20 @@ span.title_regular {
 }
 
 @media screen and (max-width: 1100px) {
+  .header-logo {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .header-title-container {
+    width: 100%;
+    text-align: center;
+
+    h1 {
+      font-size: 72px;
+    }
+  }
+
   .video_call_to_action {
     margin-top: 72px;
 
@@ -323,6 +341,11 @@ span.title_regular {
 }
 
 @media screen and (max-width: 768px) {
+  .header-title-container h1 {
+    font-size: 48px;
+    line-height: 48px;
+  }
+
   .add-new-video {
     position: relative;
     z-index: 2;
